@@ -271,9 +271,9 @@ sudo su -
 hostnamectl set-hostname serv.name
 
 sudo su -
-lsblk 
+lsblk --->elastick block storage showing
 
-df -Th
+df -Th     ----->showing storage like cpu ,memoery and ekkada mount anedi chupistundi.
 
 touch file1 file2
 
@@ -295,9 +295,9 @@ How to connect to ec2 instance ?
 
 SERVER 1:
 
-     mkfs -t ext4 /dev/nvme1n1
+     mkfs -t ext4 /dev/nvme1n1   =============>filesystems ni create chestundi
      mkdir /madhu
-     mount /dev/nvme1n1 /madhu
+     mount /dev/nvme1n1 /madhu        ========>like extra ga create chesina storage ni mount cheyaniki.
 	 
     
 SERVER 2: 
