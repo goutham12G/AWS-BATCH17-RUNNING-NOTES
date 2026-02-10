@@ -1453,11 +1453,12 @@ ty
     SIMPLE SUMMARY
 
     --------------------------------------------------
-        VPC        → Your private network in AWS  
-        Subnet     → Smaller network inside VPC  
-        IGW        → Allows internet access  
-        Route Table→ Controls where traffic goes  
-        Setup      → Create VPC → Subnets → IGW → Routes → Associate  
+        VPC              → Your private network in AWS  
+        Subnet           → Smaller network inside VPC  
+        IGW              → Allows internet access  ------>attach to vpc
+        Route Table      → Controls where traffic goes  
+        Route table conf → here we need to edit route table and attach igw and as well as edit subnets and attach.
+        Setup            → Create VPC → Subnets → IGW → Routes → Associate  
 		
 
 
@@ -1491,7 +1492,7 @@ ty
   10.81.2.0
   10.81.2.1 .........     10.81.2.255 
   
-  -----
+  ----- 
   -----
   -----
   
