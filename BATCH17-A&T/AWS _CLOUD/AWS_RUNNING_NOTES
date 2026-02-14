@@ -2495,4 +2495,230 @@ SAS
 
 
 
+DATE: 14 FEB 2026
+
+
+https://940659974468.signin.aws.amazon.com/console
+
+madhu
+Madhu@143
+
+admin access
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+        }
+    ]
+}
+
+
+
+
+
+
+    IAM –  NOTES
+
+    --------------------------------------------------
+    AUTHENTICATION VS AUTHORIZATION
+    --------------------------------------------------
+
+        Authentication:
+            Verifying WHO you are.
+            Example:
+                - Username + Password
+                - Access Key + Secret Key
+                - MFA
+
+        Authorization:
+            Deciding WHAT you are allowed to do.
+            Example:
+                - Can you create EC2?
+                - Can you delete S3 bucket?
+                - Can you access RDS?
+
+        Simple meaning:
+            Authentication → Identity check
+            Authorization  → Permission check
+
+
+    --------------------------------------------------
+    WHAT IS IAM?
+    --------------------------------------------------
+
+        IAM = Identity and Access Management.
+
+        IAM is a service in Amazon Web Services (AWS)
+        that controls:
+
+            • Who can access AWS (Authentication)
+            • What they can do (Authorization)
+
+        It manages users, groups, roles, and policies.
+
+
+    --------------------------------------------------
+    WHAT IS AN IAM USER?
+    --------------------------------------------------
+
+        An IAM User represents a person or application
+        that needs access to AWS.
+
+        It can have:
+            • Console password
+            • Access keys (for CLI/API)
+
+        Example:
+            - Developer
+            - DevOps engineer
+            - Automation script
+
+
+    --------------------------------------------------
+    WHAT IS AN IAM POLICY?
+    --------------------------------------------------
+
+        An IAM Policy is a JSON document
+        that defines permissions.
+
+        It controls:
+            • Allowed actions
+            • Denied actions
+            • Specific resources
+            • Optional conditions
+
+        Example:
+            Allow:
+                ec2:StartInstances
+                ec2:StopInstances
+
+
+    --------------------------------------------------
+    WHAT IS A CUSTOM POLICY?
+    --------------------------------------------------
+
+        Custom Policy = A policy created by you.
+
+        Used when AWS managed policies
+        do not meet your exact requirement.
+
+        Gives fine-grained control.
+		
+		
+		
+
+    --------------------------------------------------
+    BASIC STRUCTURE OF A POLICY
+    --------------------------------------------------
+
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": "ec2:StartInstances",
+              "Resource": "*"
+            }
+          ]
+        }
+
+
+    --------------------------------------------------
+    IMPORTANT KEYWORDS EXPLAINED
+    --------------------------------------------------
+
+    1) Version
+        • Defines policy language version.
+        • Usually: "2012-10-17"
+
+    2) Statement
+        • Main block containing permission rules.
+        • A policy can have multiple statements.
+
+    3) Effect
+        • Defines whether access is allowed or denied.
+        • Values:
+              - "Allow"
+              - "Deny"
+
+        Example:
+            "Effect": "Allow"
+
+    4) Action
+        • Defines what operation is permitted.
+        • Format:
+              service:operation
+
+        Examples:
+              ec2:StartInstances
+              s3:PutObject
+              iam:CreateUser
+
+    5) Resource
+        • Defines on which AWS resource
+          the action is allowed.
+
+        Example:
+              "*" → All resources
+              Specific EC2 ARN
+              Specific S3 bucket ARN
+
+
+    --------------------------------------------------
+    OPTIONAL: CONDITION (ADVANCED)
+    --------------------------------------------------
+
+        You can add conditions like:
+
+            • Allow only from specific IP
+            • Allow only during certain time
+            • Allow only if MFA is enabled
+
+
+    --------------------------------------------------
+    SIMPLE MEANING
+    --------------------------------------------------
+
+        Effect   → Allow or Deny
+        Action   → What operation
+        Resource → On which resource
+
+        In simple words:
+
+            "Allow this action on this resource."
+
+
+
+    --------------------------------------------------
+    WHAT IS AN IAM GROUP?
+    --------------------------------------------------
+
+        An IAM Group is a collection of IAM users.
+
+        You attach a policy to the group,
+        and all users inside inherit permissions.
+
+        Example:
+            Group: Developers → S3 Read Only
+            Group: Admins → Full Access
+
+
+    --------------------------------------------------
+    SIMPLE SUMMARY
+    --------------------------------------------------
+
+        Authentication → Verify identity
+        Authorization  → Grant permissions
+
+        IAM        → Access control system
+        IAM User   → Individual identity
+        IAM Policy → Permission rules
+        IAM Group  → Collection of users
+        Custom Policy → User-defined permission rules
+
+
 
