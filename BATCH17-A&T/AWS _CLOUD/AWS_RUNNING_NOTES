@@ -1957,6 +1957,769 @@ https://docs.aws.amazon.com/vpc/latest/userguide/vpc-example-private-subnets-nat
 
 
 
+    AWS NETWORKING CONCEPTS     (Inside Amazon Web Services (AWS))
+
+
+    --------------------------------------------------
+    1) VPC (Virtual Private Cloud)
+    --------------------------------------------------
+
+        • Your private network inside AWS.
+        • You control:
+              - IP address range (CIDR)
+              - Subnets
+              - Route tables
+              - Security
+        • Like your own data center in the cloud.
+
+
+    --------------------------------------------------
+    2) SUBNET
+    --------------------------------------------------
+
+        • A smaller network inside a VPC.
+        • Created from the VPC IP range.
+        • Lives inside one Availability Zone.
+
+
+    --------------------------------------------------
+    3) PUBLIC SUBNET
+    --------------------------------------------------
+
+        • Subnet that has a route to Internet Gateway.
+        • Instances here can access the internet directly.
+        • Usually used for:
+              - Load Balancer
+              - Bastion Host
+              - Web servers
+
+
+    --------------------------------------------------
+    4) PRIVATE SUBNET
+    --------------------------------------------------
+
+        • Subnet that does NOT have direct internet access.
+        • No route to Internet Gateway.
+        • Used for:
+              - Application servers
+              - Databases
+              - Internal services
+
+
+    --------------------------------------------------
+    5) INTERNET GATEWAY (IGW)
+    --------------------------------------------------
+
+        • A gateway that allows communication
+          between VPC and the internet.
+        • Attached to the VPC.
+        • Required for public internet access.
+
+
+    --------------------------------------------------
+    6) NAT GATEWAY
+    --------------------------------------------------
+
+        • Allows private subnet instances
+          to access the internet (OUTBOUND only).
+        • Prevents internet from initiating
+          connections to private instances.
+        • Used for:
+              - OS updates
+              - Downloading packages
+
+
+    --------------------------------------------------
+    7) ROUTE TABLE
+    --------------------------------------------------
+
+        • A set of rules that decides
+          where network traffic should go.
+        • Each subnet must be associated
+          with a route table.
+
+        Example:
+            10.0.0.0/16 → local
+            0.0.0.0/0   → igw-id
+
+
+    --------------------------------------------------
+    8) PUBLIC ROUTE TABLE
+    --------------------------------------------------
+
+        • Has route:
+              0.0.0.0/0 → Internet Gateway
+        • Used by public subnets.
+
+
+    --------------------------------------------------
+    9) PRIVATE ROUTE TABLE
+    --------------------------------------------------
+
+        • Does NOT have direct IGW route.
+        • May have:
+              0.0.0.0/0 → NAT Gateway
+        • Used by private subnets.
+
+
+    --------------------------------------------------
+    10) JUMP SERVER / BASTION HOST
+    --------------------------------------------------
+
+        • An EC2 instance placed in public subnet.
+        • Used to SSH into private servers.
+        • Acts as a secure entry point.
+
+        Flow:
+            Your Laptop → Bastion Host → Private EC2
+
+
+    --------------------------------------------------
+    COMPLETE FLOW SUMMARY
+    --------------------------------------------------
+
+        Internet
+            ↓
+        Internet Gateway
+            ↓
+        Public Subnet (ALB / Bastion)
+            ↓
+        Private Subnet (App / DB)
+            ↓
+        NAT Gateway (for outbound internet)
+
+        VPC contains everything.
+=========================================================================================================================
+
+
+
+====================================================================================================
+13 FEB 2026
+
+
+    AMAZON EFS (ELASTIC FILE SYSTEM) – SHORT NOTES
+
+    1) WHAT IS NFS?
+    --------------------------------------------------
+
+        NFS = Network File System
+
+        • A protocol used to share files over a network.
+        • Allows multiple machines to access the same storage.
+        • Works like a shared folder across servers.
+        • Uses port 2049.
+
+        Simple meaning:
+            NFS is the technology that lets servers
+            share files over the network.
+
+
+    --------------------------------------------------
+    WHAT IS EFS?
+    --------------------------------------------------
+
+        Amazon Elastic File System (EFS) is a
+        fully managed, scalable file storage service in AWS.
+
+        • It is shared file storage.
+        • Multiple EC2 instances can access it at the same time.
+        • Works using NFS protocol.
+        • Automatically scales storage size.
+
+        Simple meaning:
+            EFS = Shared network drive for many servers.
+		    EFS = AWS-managed NFS storage.
+			
+			        
+		NFS → Protocol (technology) - 2049
+        EFS → AWS service that uses NFS
+
+
+    --------------------------------------------------
+    WHERE IS EFS USED?
+    --------------------------------------------------
+
+        • Shared application data
+        • Web servers needing same files
+        • Container workloads (ECS, EKS)
+        • Content management systems
+        • Analytics workloads
+
+
+    --------------------------------------------------
+    HOW TO CONFIGURE EFS (SIMPLE STEPS)
+    --------------------------------------------------
+
+        1) Create EFS
+              - Choose VPC
+              - Select Availability Zones
+
+        2) Create Mount Targets
+              - One mount target per AZ
+              - Attach security groups
+
+        3) Configure Security Group
+              - Allow NFS port 2049
+              - Allow traffic from EC2 instances
+
+        4) Launch EC2 in same VPC
+
+        5) Mount EFS on EC2
+              Example (Linux):
+                  sudo mount -t nfs4 <efs-dns-name>:/ /mnt/efs
+
+        6) Use it like a normal directory
+              Files are shared across all mounted EC2s.
+
+
+    --------------------------------------------------
+    KEY FEATURES OF EFS
+    --------------------------------------------------
+
+        • Fully managed (no capacity planning)
+        • Auto-scaling storage
+        • Multi-AZ availability
+        • Highly durable
+        • Shared file access
+        • Pay only for storage used
+
+
+    --------------------------------------------------
+    EFS VS EBS (IMPORTANT DIFFERENCE)
+    --------------------------------------------------
+
+        EBS (Elastic Block Store):
+
+            • Block-level storage
+            • Attached to ONE EC2 at a time
+            • Like a hard disk
+            • Must choose size manually
+            • Typically used for OS / database storage
+
+        EFS (Elastic File System):
+
+            • File-level storage
+            • Shared by multiple EC2s
+            • Like a shared network folder
+            • Auto-scales storage
+            • Used for shared applications
+
+
+    --------------------------------------------------
+    SIMPLE COMPARISON
+    --------------------------------------------------
+
+        EBS  → Single server disk
+        EFS  → Shared storage for many servers
+
+        EBS  → Fixed size
+        EFS  → Automatically grows
+
+        EBS  → One instance at a time
+        EFS  → Many instances simultaneously
+
+
+    --------------------------------------------------
+    WHEN TO USE WHICH?
+    --------------------------------------------------
+
+        Use EBS when:
+            • You need storage for one EC2
+            • You need high IOPS for database
+            • You need boot volume
+
+        Use EFS when:
+            • Multiple EC2s need shared files
+            • Applications need common storage
+            • Containers need persistent shared storage
+
+
+----------------------------------
+
+        EFS = Managed, shared file storage in AWS.
+        EBS = Block storage attached to a single EC2.
+
+        EFS is for shared workloads.
+        EBS is for individual server storage.
+		
+	
+
+
+    --------------------------------------------------
+    WHAT ARE EFS LIFECYCLE POLICIES?
+    --------------------------------------------------
+
+        EFS can automatically move files between
+        storage classes to reduce cost.
+
+        Based on how frequently files are accessed.
+
+
+    --------------------------------------------------
+    EFS STORAGE CLASSES
+    --------------------------------------------------
+
+        1) Standard
+             • Frequently accessed files
+             • Higher cost
+             • High performance
+
+        2) Infrequent Access (IA)
+             • Files not accessed for 30+ days (configurable)
+             • Lower storage cost
+             • Small access charge
+
+        3) Archive
+             • Rarely accessed data
+             • Very low cost
+             • Higher access latency
+
+
+    --------------------------------------------------
+    HOW EFS LIFECYCLE POLICY WORKS
+    --------------------------------------------------
+
+        Example:
+
+            File not accessed for 30 days
+                → Automatically moves to IA
+
+            File not accessed for 90 days
+                → Moves to Archive
+
+        If accessed again:
+            It automatically moves back to Standard.
+
+
+		
+*************************************************************************************************************
+
+    MOUNT TARGETS IN EFS – SHORT NOTES
+
+    --------------------------------------------------
+    WHAT IS A MOUNT TARGET?
+    --------------------------------------------------
+
+        A Mount Target is a network endpoint
+        inside a subnet that allows EC2 instances
+        to connect to EFS.
+
+        It provides an IP address in your subnet
+        for accessing EFS.
+
+
+    --------------------------------------------------
+    WHY DO WE NEED MOUNT TARGETS?
+    --------------------------------------------------
+
+        • EFS is a regional service (multi-AZ).
+        • EC2 instances connect to EFS through
+          mount targets.
+        • Each Availability Zone needs its own
+          mount target for high availability.
+
+
+    --------------------------------------------------
+    IMPORTANT RULE
+    --------------------------------------------------
+
+        One Mount Target per Availability Zone (AZ).
+
+        Example:
+            If your VPC has:
+                AZ-a
+                AZ-b
+                AZ-c
+
+            You should create:
+                3 Mount Targets
+                (one in each AZ)
+
+
+    --------------------------------------------------
+    HOW IT WORKS
+    --------------------------------------------------
+
+        EC2 Instance
+             ↓
+        Mount Target (in same AZ)
+             ↓
+        EFS File System
+
+
+    --------------------------------------------------
+    CONFIGURATION STEPS (SIMPLE)
+    --------------------------------------------------
+
+        1) Create EFS
+        2) Select VPC
+        3) Choose subnets (one per AZ)
+        4) Attach security group
+              - Allow NFS port 2049
+        5) EC2 mounts EFS using DNS name
+
+
+    --------------------------------------------------
+    SECURITY REQUIREMENT
+    --------------------------------------------------
+
+        Security Group must allow:
+
+            Port 2049 (NFS)
+            Source = EC2 Security Group
+
+
+    --------------------------------------------------
+    SIMPLE SUMMARY
+    --------------------------------------------------
+
+        Mount Target = Access point to EFS
+        Lives inside a subnet
+        One per AZ
+        Required for EC2 to connect to EFS
+        Uses NFS protocol (port 2049)
+
+
+
+--------------------------------------------------------------------
+
+ WHAT IS A MOUNT TARGET?
+    --------------------------------------------------
+
+        A Mount Target is a network endpoint
+        inside a subnet that allows EC2 instances
+        to connect to EFS.
+
+   
+
+====================================================================
+
+
+CLOUD MODELS :
+ON PEM 
+IAAS
+PAS
+SAS
+
+    CLOUD SERVICE MODELS – SHORT NOTES
+
+    --------------------------------------------------
+    1) ON-PREMISES (ON-PREM)
+    --------------------------------------------------
+
+        • Everything is managed by you.
+        • Physical servers in your office/data center.
+        • You manage:
+              - Hardware
+              - Networking
+              - Storage
+              - OS
+              - Applications
+              - Security
+
+        High control
+        High responsibility
+        High maintenance cost
+
+
+    --------------------------------------------------
+    2) IaaS (Infrastructure as a Service)
+    --------------------------------------------------
+
+        • Cloud provider manages:
+              - Hardware
+              - Networking
+              - Data center
+
+        • You manage:
+              - Operating System
+              - Applications
+              - Runtime
+              - Data
+
+        Example services:
+              - EC2
+              - Virtual Machines
+              - EBS
+			  - EFS 
+
+        Most flexible model.
+
+
+    --------------------------------------------------
+    3) PaaS (Platform as a Service)
+    --------------------------------------------------
+
+        • Cloud provider manages:
+              - Hardware
+              - OS
+              - Runtime
+              - Middleware
+
+        • You manage:
+              - Application code
+              - Data
+
+        Example:
+              - AWS Elastic Beanstalk
+              - Azure App Service
+
+        Good for developers.
+
+
+    --------------------------------------------------
+    4) SaaS (Software as a Service)
+    --------------------------------------------------
+
+        • Cloud provider manages everything.
+        • You only use the software.
+
+        Example:
+              - Gmail
+              - Microsoft 365
+              - Salesforce
+
+        No infrastructure management.
+
+
+    --------------------------------------------------
+    SIMPLE COMPARISON
+    --------------------------------------------------
+
+        On-Prem → You manage everything  
+        IaaS    → You manage OS + apps  
+        PaaS    → You manage only app code  
+        SaaS    → You just use the software  
+
+
+---------------
+
+
+
+DATE: 14 FEB 2026
+
+
+https://940659974468.signin.aws.amazon.com/console
+
+madhu
+Madhu@143
+
+admin access
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+        }
+    ]
+}
+
+
+
+
+
+
+    IAM –  NOTES
+
+    --------------------------------------------------
+    AUTHENTICATION VS AUTHORIZATION
+    --------------------------------------------------
+
+        Authentication:
+            Verifying WHO you are.
+            Example:
+                - Username + Password
+                - Access Key + Secret Key
+                - MFA
+
+        Authorization:
+            Deciding WHAT you are allowed to do.
+            Example:
+                - Can you create EC2?
+                - Can you delete S3 bucket?
+                - Can you access RDS?
+
+        Simple meaning:
+            Authentication → Identity check
+            Authorization  → Permission check
+
+
+    --------------------------------------------------
+    WHAT IS IAM?
+    --------------------------------------------------
+
+        IAM = Identity and Access Management.
+
+        IAM is a service in Amazon Web Services (AWS)
+        that controls:
+
+            • Who can access AWS (Authentication)
+            • What they can do (Authorization)
+
+        It manages users, groups, roles, and policies.
+
+
+    --------------------------------------------------
+    WHAT IS AN IAM USER?
+    --------------------------------------------------
+
+        An IAM User represents a person or application
+        that needs access to AWS.
+
+        It can have:
+            • Console password
+            • Access keys (for CLI/API)
+
+        Example:
+            - Developer
+            - DevOps engineer
+            - Automation script
+
+
+    --------------------------------------------------
+    WHAT IS AN IAM POLICY?
+    --------------------------------------------------
+
+        An IAM Policy is a JSON document
+        that defines permissions.
+
+        It controls:
+            • Allowed actions
+            • Denied actions
+            • Specific resources
+            • Optional conditions
+
+        Example:
+            Allow:
+                ec2:StartInstances
+                ec2:StopInstances
+
+
+    --------------------------------------------------
+    WHAT IS A CUSTOM POLICY?
+    --------------------------------------------------
+
+        Custom Policy = A policy created by you.
+
+        Used when AWS managed policies
+        do not meet your exact requirement.
+
+        Gives fine-grained control.
+		
+		
+		
+
+    --------------------------------------------------
+    BASIC STRUCTURE OF A POLICY
+    --------------------------------------------------
+
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": "ec2:StartInstances",
+              "Resource": "*"
+            }
+          ]
+        }
+
+
+    --------------------------------------------------
+    IMPORTANT KEYWORDS EXPLAINED
+    --------------------------------------------------
+
+    1) Version
+        • Defines policy language version.
+        • Usually: "2012-10-17"
+
+    2) Statement
+        • Main block containing permission rules.
+        • A policy can have multiple statements.
+
+    3) Effect
+        • Defines whether access is allowed or denied.
+        • Values:
+              - "Allow"
+              - "Deny"
+
+        Example:
+            "Effect": "Allow"
+
+    4) Action
+        • Defines what operation is permitted.
+        • Format:
+              service:operation
+
+        Examples:
+              ec2:StartInstances
+              s3:PutObject
+              iam:CreateUser
+
+    5) Resource
+        • Defines on which AWS resource
+          the action is allowed.
+
+        Example:
+              "*" → All resources
+              Specific EC2 ARN
+              Specific S3 bucket ARN
+
+
+    --------------------------------------------------
+    OPTIONAL: CONDITION (ADVANCED)
+    --------------------------------------------------
+
+        You can add conditions like:
+
+            • Allow only from specific IP
+            • Allow only during certain time
+            • Allow only if MFA is enabled
+
+
+    --------------------------------------------------
+    SIMPLE MEANING
+    --------------------------------------------------
+
+        Effect   → Allow or Deny
+        Action   → What operation
+        Resource → On which resource
+
+        In simple words:
+
+            "Allow this action on this resource."
+
+
+
+    --------------------------------------------------
+    WHAT IS AN IAM GROUP?
+    --------------------------------------------------
+
+        An IAM Group is a collection of IAM users.
+
+        You attach a policy to the group,
+        and all users inside inherit permissions.
+
+        Example:
+            Group: Developers → S3 Read Only
+            Group: Admins → Full Access
+
+
+    --------------------------------------------------
+    SIMPLE SUMMARY
+    --------------------------------------------------
+
+        Authentication → Verify identity
+        Authorization  → Grant permissions
+
+        IAM        → Access control system
+        IAM User   → Individual identity
+        IAM Policy → Permission rules
+        IAM Group  → Collection of users
+        Custom Policy → User-defined permission rules
 
 
 
