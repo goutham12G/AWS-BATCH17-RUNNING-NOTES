@@ -2722,4 +2722,1383 @@ admin access
         Custom Policy → User-defined permission rules
 
 
+************************************************************************************************
 
+
+DATE: 16 FEB 2026
+
+
+
+
+    AMAZON S3 – COMPLETE NOTES (FINAL UPDATED)
+
+    --------------------------------------------------
+    WHAT IS S3?
+    --------------------------------------------------
+
+        S3 = Simple Storage Service.
+
+        It is an object storage service in Amazon Web Services (AWS).
+
+        • Stores data as objects
+        • Highly durable (11 9’s durability)
+        • Infinitely scalable
+        • Accessible over HTTP/HTTPS
+        • No server management required
+
+
+    --------------------------------------------------
+    BASIC TERMINOLOGY
+    --------------------------------------------------
+
+        Bucket:
+            Container that stores objects.
+            Bucket name must be globally unique.
+
+        Object:
+            File stored in S3 (data + metadata + key).
+
+        Key:
+            Unique name of the object inside bucket.
+
+        Region:
+            Bucket is created in a specific AWS region.
+
+
+    --------------------------------------------------
+    S3 VERSIONING
+    --------------------------------------------------
+
+        Versioning allows multiple versions
+        of the same object.
+
+        • Protects from accidental delete
+        • Protects from accidental overwrite
+        • Each upload creates new Version ID
+
+        States:
+            - Enabled
+            - Suspended
+            - Never enabled
+
+
+    --------------------------------------------------
+    DELETE MARKER
+    --------------------------------------------------
+
+        When versioning is enabled:
+
+            Deleting an object creates
+            a "Delete Marker".
+
+        • Object appears deleted
+        • Old versions still exist
+        • Can restore by removing delete marker
+
+
+    --------------------------------------------------
+    S3 LIFECYCLE POLICY
+    --------------------------------------------------
+
+        Automatically moves or deletes objects
+        based on time rules.
+
+        Example:
+
+            After 30 days → Standard-IA
+            After 90 days → Glacier
+            After 365 days → Delete
+
+        Used for cost optimization.
+
+
+    --------------------------------------------------
+    WHAT IS A STATIC WEBSITE?
+    --------------------------------------------------
+
+        A static website contains only:
+
+            • HTML
+            • CSS
+            • JavaScript
+            • Images
+
+        No backend processing.
+        No database.
+        No server-side logic.
+
+        Example:
+            Portfolio website
+            Landing page
+            Company info page
+
+
+    --------------------------------------------------
+    HOW TO HOST STATIC WEBSITE IN S3
+    --------------------------------------------------
+
+        Step 1:
+            Create an S3 bucket
+            (Bucket name = domain name recommended)
+
+        Step 2:
+            Upload:
+                - index.html
+                - error.html
+                - CSS, JS files
+
+        Step 3:
+            Enable "Static Website Hosting"
+                • Set index document
+                • Set error document
+
+        Step 4:
+            Update Bucket Policy
+                Allow public read access
+
+        Step 5:
+            Use generated S3 website URL
+
+        Optional:
+            Use CloudFront for HTTPS + CDN
+
+
+    --------------------------------------------------
+    WHY STATIC WEBSITE IS GOOD FOR S3?
+    --------------------------------------------------
+
+        • No server required
+        • No EC2 cost
+        • Highly scalable
+        • Very low cost
+        • High availability
+        • Easy deployment
+        • Integrated with CloudFront CDN
+
+        Perfect for:
+            - React apps
+            - Angular apps
+            - Documentation sites
+            - Landing pages
+
+
+    --------------------------------------------------
+    S3 STORAGE CLASSES
+    --------------------------------------------------
+
+        • Standard
+        • Standard-IA
+        • One Zone-IA
+        • Intelligent Tiering
+        • Glacier
+        • Deep Archive
+
+
+    --------------------------------------------------
+    S3 FEATURES
+    --------------------------------------------------
+
+        • High durability
+        • Versioning
+        • Lifecycle policies
+        • Encryption
+        • Replication
+        • Event notifications
+        • Static website hosting
+        • Access control
+
+
+    --------------------------------------------------
+    REAL-TIME USE CASES
+    --------------------------------------------------
+
+        • Backups
+        • Log storage
+        • Media storage
+        • CI/CD artifacts
+        • Data lake
+        • Static website hosting
+
+
+    --------------------------------------------------
+    S3 VS EBS VS EFS
+    --------------------------------------------------
+
+        S3  → Object storage (HTTP based)
+        EBS → Block storage (attached disk)
+        EFS → Shared file storage (NFS based)
+
+
+    --------------------------------------------------
+    SIMPLE SUMMARY
+    --------------------------------------------------
+
+        S3 = Scalable object storage
+        Versioning = Keeps multiple copies
+        Delete Marker = Hides object on delete
+        Lifecycle = Auto move/delete
+        Static Hosting = Host HTML websites without servers
+
+        S3 is best for scalable, durable,
+        low-cost storage and static websites.
+
+
+-------------------------------------------------------------------------------
+
+    REAL DEVOPS PROJECT USING S3
+
+    --------------------------------------------------
+    PROJECT 1: STATIC WEBSITE + CI/CD PIPELINE
+    --------------------------------------------------
+
+        Use Case:
+            Deploy a React/Angular static website automatically.
+
+        Architecture:
+            Developer pushes code → GitHub
+            CI/CD Pipeline builds app
+            Build output uploaded to S3 bucket
+            CloudFront serves website globally
+
+        Steps:
+
+            1) Create S3 bucket
+                   Enable static website hosting
+                   Upload index.html
+
+            2) Create CloudFront distribution
+                   Set S3 as origin
+
+            3) Setup CI/CD (GitHub Actions / Jenkins)
+                   - Build project
+                   - Upload build folder to S3
+                   - Invalidate CloudFront cache
+
+        Why S3?
+            • No EC2 required
+            • Auto scaling
+            • Very low cost
+            • Highly available
+
+
+    --------------------------------------------------
+    PROJECT 2: LOG STORAGE + MONITORING
+    --------------------------------------------------
+
+        Use Case:
+            Store application logs securely.
+
+        Architecture:
+            EC2 / Containers generate logs
+            Logs pushed to S3
+            Athena used for querying
+            CloudWatch alerts on errors
+
+        Why S3?
+            • Cheap long-term storage
+            • Lifecycle rules to move to Glacier
+            • Durable storage
+
+
+    --------------------------------------------------
+    PROJECT 3: BACKUP & DISASTER RECOVERY
+    --------------------------------------------------
+
+        Use Case:
+            Backup EBS snapshots or database dumps.
+
+        Flow:
+            RDS snapshot / DB dump
+                ↓
+            Stored in S3
+                ↓
+            Replicated to another region
+
+        Benefits:
+            • Cross-region replication
+            • Versioning protects backups
+            • Lifecycle reduces cost
+
+
+    --------------------------------------------------
+    PROJECT 4: TERRAFORM REMOTE STATE STORAGE
+    --------------------------------------------------
+
+        Use Case:
+            Store Terraform state file securely.
+
+        Setup:
+            Create S3 bucket
+            Enable versioning
+            Enable encryption
+            Use DynamoDB for locking
+
+        Benefit:
+            • Team collaboration
+            • State file safety
+            • Prevent corruption
+
+
+    --------------------------------------------------
+    PROJECT 5: CI/CD ARTIFACT STORAGE
+    --------------------------------------------------
+
+        Use Case:
+            Store build artifacts (JAR, WAR, Docker layers)
+
+        Flow:
+            Code build → Artifact generated
+            Artifact uploaded to S3
+            Deployment server downloads artifact
+
+        Why?
+            • Central storage
+            • Secure
+            • Easy integration
+
+
+    --------------------------------------------------
+    WHY S3 IS PERFECT FOR DEVOPS
+    --------------------------------------------------
+
+        • Highly scalable
+        • Cost-effective
+        • No infrastructure management
+        • Easy integration with:
+              - EC2
+              - Lambda
+              - CloudFront
+              - Athena
+              - Glue
+              - CI/CD tools
+
+        • Supports automation via CLI and SDK
+
+
+    --------------------------------------------------
+    SIMPLE SUMMARY
+    --------------------------------------------------
+
+        In DevOps, S3 is used for:
+
+            • Static website hosting
+            • Backup storage
+            • Log storage
+            • Terraform state
+            • Artifact repository
+            • Data lake storage
+
+        S3 is one of the most used AWS services
+        in real-world DevOps projects.
+
+========================================================
+
+    AWS S3 STORAGE CLASSES – SHORT NOTES
+
+    (Inside Amazon Web Services (AWS))
+
+
+    --------------------------------------------------
+    1) S3 STANDARD
+    --------------------------------------------------
+
+        • Frequently accessed data
+        • High availability
+        • Low latency
+        • Higher storage cost
+
+        Use When:
+            - Active websites
+            - Applications
+            - Frequently used files
+
+
+    --------------------------------------------------
+    2) S3 STANDARD – INFREQUENT ACCESS (STANDARD-IA)
+    --------------------------------------------------
+
+        • Rarely accessed data
+        • Lower storage cost
+        • Small retrieval fee
+
+        Use When:
+            - Backups
+            - Disaster recovery copies
+            - Data accessed occasionally
+
+
+    --------------------------------------------------
+    3) S3 ONE ZONE-IA
+    --------------------------------------------------
+
+        • Stored in single Availability Zone
+        • Lower cost than Standard-IA
+        • Less resilient
+
+        Use When:
+            - Secondary backups
+            - Re-creatable data
+            - Non-critical data
+
+
+    --------------------------------------------------
+    4) S3 INTELLIGENT-TIERING
+    --------------------------------------------------
+
+        • Automatically moves data
+          between frequent and infrequent tiers
+        • Slight monitoring fee
+
+        Use When:
+            - Access pattern is unpredictable
+            - You don’t want to manage lifecycle rules
+
+
+    --------------------------------------------------
+    5) S3 GLACIER INSTANT RETRIEVAL
+    --------------------------------------------------
+
+        • Archival data
+        • Immediate retrieval
+        • Lower cost than Standard
+
+        Use When:
+            - Archived but occasionally needed data
+            - Compliance documents
+
+
+    --------------------------------------------------
+    6) S3 GLACIER FLEXIBLE RETRIEVAL
+    --------------------------------------------------
+
+        • Very low storage cost
+        • Retrieval takes minutes to hours
+
+        Use When:
+            - Long-term backups
+            - Rarely accessed archives
+
+
+    --------------------------------------------------
+    7) S3 GLACIER DEEP ARCHIVE
+    --------------------------------------------------
+
+        • Lowest storage cost
+        • Retrieval takes hours
+        • Designed for long-term retention (7+ years)
+
+        Use When:
+            - Legal/compliance storage
+            - Old audit data
+            - Rarely accessed historical data
+
+
+    --------------------------------------------------
+    SIMPLE DECISION GUIDE
+    --------------------------------------------------
+
+        Frequent access      → Standard
+        Rare access          → Standard-IA
+        Single AZ + cheaper  → One Zone-IA
+        Unknown pattern      → Intelligent-Tiering
+        Archive + fast read  → Glacier Instant
+        Archive + low cost   → Glacier Flexible
+        Very long-term       → Glacier Deep Archive
+
+
+    --------------------------------------------------
+    SIMPLE SUMMARY
+    --------------------------------------------------
+
+        Standard = Active data  
+        IA = Less frequently used data  
+        Glacier = Archive data  
+        Intelligent-Tiering = Auto optimization  
+
+==================================
+
+
+DATE: 17 FEB 2026
+
+    AWS CLI – COMPLETE SHORT NOTES
+
+    --------------------------------------------------
+    WHAT IS AWS CLI?
+    --------------------------------------------------
+
+        AWS CLI = Command Line Interface.
+
+        It is a tool that allows you to interact with
+        Amazon Web Services (AWS) using commands
+        from terminal instead of the web console (GUI).
+
+        Example:
+            aws s3 ls
+            aws ec2 describe-instances
+
+
+    --------------------------------------------------
+    WHY DO WE NEED AWS CLI WHEN GUI EXISTS?
+    --------------------------------------------------
+
+        GUI:
+            • Good for beginners
+            • Manual operations
+            • Not automation-friendly
+
+        AWS CLI:
+            • Faster
+            • Scriptable
+            • Automatable
+            • Used in CI/CD pipelines
+            • Used in production troubleshooting
+            • Works in servers without browser
+
+        DevOps rule:
+            If you repeat a task → Automate it.
+            CLI helps automation.
+
+AKIA5Wxxxxxxxxxxxxxxxxxxxxxxxx
+elFDCxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+    --------------------------------------------------
+    HOW AWS CLI WORKS
+    --------------------------------------------------
+
+        1) Install AWS CLI
+        2) Configure credentials:
+
+            aws configure
+
+            Enter:
+                Access Key
+                Secret Key
+                Region
+                Output format -- none / json 
+
+        Credentials are stored locally ( in user home directly 
+
+    --------------------------------------------------
+    BASIC COMMAND STRUCTURE
+    --------------------------------------------------
+
+        aws <service> <operation> --parameters
+
+        Example:
+            aws ec2 describe-instances
+            aws s3 cp file.txt s3://mybucket/
+
+
+    --------------------------------------------------
+    DAY-TO-DAY DEVOPS OPERATIONS USING AWS CLI
+    --------------------------------------------------
+
+    1) S3 OPERATIONS
+
+        List buckets:
+            aws s3 ls
+
+        List files inside bucket:
+            aws s3 ls s3://mybucket/
+
+        Upload file:
+            aws s3 cp file.txt s3://mybucket/
+
+        Download file:
+            aws s3 cp s3://mybucket/file.txt .
+
+        Sync local folder:
+            aws s3 sync ./app s3://mybucket/
+
+
+    2) EC2 OPERATIONS
+
+        List EC2 instances:
+            aws ec2 describe-instances
+
+        Start instance:
+            aws ec2 start-instances --instance-ids i-0a54fdb26081aade5
+
+        Stop instance:
+            aws ec2 stop-instances --instance-ids i-123456
+
+        Terminate instance:
+            aws ec2 terminate-instances --instance-ids i-123456
+			
+	
+        TO create instance
+
+aws ec2 run-instances \
+  --image-id ami-0c1fe732b5494dc14 \
+  --instance-type t3.micro \
+  --key-name batch17a \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Dev-Server},{Key=Env,Value=Dev}]'
+
+
+
+	
+
+
+    3) SECURITY GROUP OPERATIONS
+
+        List security groups:
+            aws ec2 describe-security-groups
+
+        Authorize inbound rule:
+            aws ec2 authorize-security-group-ingress \
+                --group-id sg-12345 \
+                --protocol tcp \
+                --port 22 \
+                --cidr 0.0.0.0/0
+
+
+    4) IAM OPERATIONS
+
+        List IAM users:
+            aws iam list-users
+
+        Create IAM user:
+            aws iam create-user --user-name devuser
+
+        Attach policy:
+            aws iam attach-user-policy \
+                --user-name devuser \
+                --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+
+
+    5) CLOUDWATCH LOGS
+
+        Describe log groups:
+            aws logs describe-log-groups
+
+
+    6) AUTO SCALING
+
+        Describe ASGs:
+            aws autoscaling describe-auto-scaling-groups
+
+
+    --------------------------------------------------
+    REAL DEVOPS USE CASES
+    --------------------------------------------------
+
+        • Automate deployments
+        • Upload build artifacts to S3
+        • Trigger infrastructure changes
+        • Backup automation scripts
+        • Monitoring and log retrieval
+        • Managing EC2 fleet
+        • Managing IAM users programmatically
+        • Used inside:
+              - Jenkins
+              - GitHub Actions
+              - Terraform external scripts
+
+
+    --------------------------------------------------
+    WHY CLI IS VERY IMPORTANT FOR DEVOPS
+    --------------------------------------------------
+
+        • Infrastructure as Code relies on CLI
+        • Automation requires CLI
+        • GUI is not scalable
+        • Production servers don’t have browsers
+        • Faster troubleshooting
+
+
+    --------------------------------------------------
+    SIMPLE SUMMARY
+    --------------------------------------------------
+
+        AWS CLI = Terminal-based access to AWS.
+
+        GUI = Manual work
+        CLI = Automation + Speed + DevOps
+
+        Every DevOps engineer must know AWS CLI.
+
+
+18 FEB 2026
+
+    IAM ROLE 
+
+    --------------------------------------------------
+    WHAT IS AN IAM ROLE?
+    --------------------------------------------------
+
+An IAM role is an identity you can create that has specific permissions with credentials that are valid for short durations. Roles can be assumed by entities that you trust.
+
+
+        An IAM Role is an AWS identity
+        that has permissions but does NOT have
+        permanent credentials (no username/password).
+
+        A role is assumed temporarily
+        by a user, application, or AWS service.
+
+
+    --------------------------------------------------
+    SIMPLE DEFINITION
+    --------------------------------------------------
+
+        IAM User  → Permanent identity (person or app)
+        IAM Role  → Temporary identity (assumed when needed)
+
+
+    --------------------------------------------------
+    IAM USER VS IAM ROLE
+    --------------------------------------------------
+
+        IAM User:
+            • Has username
+            • Has password
+            • Has access keys
+            • Long-term credentials
+            • Used for people or external apps
+
+        IAM Role:
+            • No password
+            • No permanent access keys
+            • Temporary security credentials
+            • Automatically rotated credentials
+            • Used by AWS services or cross-account access
+
+
+    --------------------------------------------------
+    WHY IAM ROLE IS IMPORTANT?
+    --------------------------------------------------
+
+        • More secure (no hardcoded access keys)
+        • Temporary credentials
+        • Automatically rotated
+        • Best practice in production
+        • Required for service-to-service access
+
+
+    --------------------------------------------------
+    REAL-TIME USE CASES
+    --------------------------------------------------
+
+    1) EC2 ACCESSING S3
+
+        Scenario:
+            EC2 needs to upload logs to S3.
+
+        Wrong Way:
+            Store access key inside EC2 (unsafe).
+
+        Correct Way:
+            Attach IAM Role to EC2.
+            EC2 automatically gets temporary credentials.
+
+        Benefit:
+            No secret keys stored on server.
+
+
+    --------------------------------------------------
+
+    2) LAMBDA ACCESSING DYNAMODB
+
+        Lambda function needs database access.
+
+        Solution:
+            Attach IAM Role to Lambda
+            with required DynamoDB permissions.
+
+
+    --------------------------------------------------
+
+    3) CROSS-ACCOUNT ACCESS
+
+        Company has:
+            Account A (Dev)
+            Account B (Prod)
+
+        Dev engineers assume a role
+        in Production account temporarily.
+
+
+    --------------------------------------------------
+
+    4) CI/CD PIPELINE ACCESS
+
+        Jenkins / GitHub Actions
+        assumes an IAM Role to:
+
+            • Deploy EC2
+            • Upload artifacts to S3
+            • Modify infrastructure
+
+
+    --------------------------------------------------
+
+    5) EKS / ECS SERVICE ROLES
+
+        Containers need access to:
+            • S3
+            • Secrets Manager
+            • RDS
+
+        IAM Role provides temporary secure access.
+
+
+    --------------------------------------------------
+    HOW IAM ROLE WORKS (SIMPLE FLOW)
+    --------------------------------------------------
+
+        User / Service
+                ↓
+        Assumes Role
+                ↓
+        Gets Temporary Credentials
+                ↓
+        Performs allowed actions
+
+
+    --------------------------------------------------
+    IMPORTANT TERMS
+    --------------------------------------------------
+
+        Trust Policy:
+            Defines WHO can assume the role.
+			
+			
+			
+	    {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "sts:AssumeRole"
+            ],
+            "Principal": {
+                "Service": [
+                    "ec2.amazonaws.com"
+                ]
+            }
+        }
+    ]
+    }		
+			
+			
+
+        Permission Policy:
+            Defines WHAT actions are allowed.
+
+
+    --------------------------------------------------
+    SIMPLE SUMMARY
+    --------------------------------------------------
+
+        IAM User  → Permanent login identity
+        IAM Role  → Temporary permission identity
+
+        Role is safer and preferred
+        for applications and AWS services.
+
+        DevOps best practice:
+            Always use IAM Role instead of storing access keys.
+
+
+===============================================================
+
+
+====================================================================
+====================================================================
+RDS & DATABASE TYPES
+====================================================================
+
+
+DATABASE SERVICES IN AWS
+------------------------
+
+AWS provides database services under Amazon RDS
+(Relational Database Service) and other NoSQL services.
+
+
+====================================================================
+1) STRUCTURED DATABASES (RELATIONAL DATABASES)
+====================================================================
+
+Definition:
+
+    Structured databases store data in predefined schemas.
+    Data is organized into tables with rows and columns.
+
+    They use SQL (Structured Query Language)
+    to query and manage data.
+
+Key Characteristics:
+
+    • Fixed schema
+    • Tables, rows, columns
+    • Relationships using foreign keys
+    • ACID compliant (transactions)
+    • Strong consistency
+
+
+Examples:
+
+MySQL
+    Open-source RDBMS.
+    Commonly used for web applications.
+
+PostgreSQL
+    Advanced open-source RDBMS.
+    Supports complex queries and extensions.
+
+Microsoft SQL Server
+    Enterprise database by Microsoft.
+    Strong integration with .NET ecosystem.
+
+Oracle Database
+    Enterprise-grade commercial database.
+    High scalability and performance.
+
+IBM Db2
+    Enterprise RDBMS optimized for large workloads.
+
+SQLite
+    Lightweight embedded relational database.
+    Used in mobile and desktop apps.
+
+
+AWS RELATIONAL SERVICE:
+
+    Amazon RDS supports:
+        - MySQL
+        - PostgreSQL
+        - MariaDB
+        - SQL Server
+        - Oracle
+
+    Amazon Aurora
+        AWS-optimized high-performance relational database.
+
+
+CRUD 
+
+====================================================================
+2) SEMI-STRUCTURED DATABASES (NoSQL – Flexible Schema)
+====================================================================
+
+Definition:
+
+    Semi-structured databases do not require fixed schema.
+    Data structure can vary between records.
+
+    Often use:
+        - JSON
+        - Key-value
+        - Wide-column format
+
+Key Characteristics:
+
+    • Flexible schema
+    • Horizontally scalable
+    • High availability
+    • Suitable for large-scale distributed systems
+
+
+Examples:
+
+MongoDB
+    Document database storing JSON-like documents.
+
+Apache Cassandra
+    Distributed wide-column database.
+    Designed for high scalability.
+
+Amazon DynamoDB
+    Fully managed NoSQL key-value database by AWS.
+
+Google Cloud Datastore
+    Document-based NoSQL database.
+
+OrientDB
+    Multi-model database (graph + document).
+
+
+AWS NoSQL Services:
+
+    DynamoDB
+    DocumentDB (MongoDB compatible)
+
+
+====================================================================
+3) UNSTRUCTURED DATA (NOT A DATABASE TYPE)
+====================================================================
+
+Important note:
+
+    Unstructured data is NOT equal to NoSQL database.
+
+    Unstructured data means:
+        Data without fixed format or schema.
+
+Examples of Unstructured Data:
+
+    • Images
+    • Videos
+    • Audio
+    • Log files
+    • PDFs
+    • Backups
+
+
+Tools Used to Store Unstructured Data:
+
+Amazon S3
+    Object storage for unlimited unstructured data.
+
+Azure Blob Storage
+    Object storage for binary data.
+
+Hadoop (HDFS)
+    Distributed file system for big data.
+
+Elasticsearch
+    Search engine for logs and text indexing.
+
+Apache Solr
+    Text search engine built on Lucene.
+
+Cassandra (with blobs)
+    Can store binary data, but not ideal for large files.
+
+
+Important Note:
+
+    Object storage like S3 is NOT a database.
+    It is storage service.
+
+
+====================================================================
+SIMPLE COMPARISON
+====================================================================
+
+Structured
+    Fixed schema
+    SQL based
+    Strong consistency
+    Example: MySQL, PostgreSQL
+
+Semi-Structured (NoSQL)
+    Flexible schema
+    JSON / key-value
+    Highly scalable
+    Example: MongoDB, DynamoDB
+
+Unstructured
+    No defined format
+    Stored in object storage
+    Example: Images in S3
+
+
+====================================================================
+WHEN TO USE WHAT?
+====================================================================
+
+Use Relational DB:
+    - Banking systems
+    - ERP systems
+    - Transactions
+    - Strong consistency required
+
+Use NoSQL:
+    - Large-scale web apps
+    - Real-time apps
+    - IoT data
+    - High traffic apps
+
+Use Object Storage (S3):
+    - Media storage
+    - Backups
+    - Logs
+    - Data lakes
+
+
+====================================================================
+AWS DATABASE SUMMARY
+====================================================================
+
+Relational:
+    Amazon RDS
+    Amazon Aurora
+
+NoSQL:
+    DynamoDB
+    DocumentDB
+
+In-memory:
+    ElastiCache (Redis, Memcached)
+
+Search:
+    OpenSearch (Elasticsearch service)
+
+Object Storage:
+    Amazon S3
+
+
+
+
+
+=========================================================================
+
+DATE: 21 FEB 2026
+
+---------------
+
+b17-prod-db.cyje0aiouw1i.us-east-1.rds.amazonaws.com
+
+ mysql work bench 
+ 
+ sqlectron 
+ 
+
+=============================
+
+mysql -h your-rds-endpoint.amazonaws.com -u yourusername -p
+
+=================================
+
+SHOW DATABASES;  - to view all available databases:
+
+USE database_name;
+SELECT DATABASE();
+
+
+CREATE TABLE employees (
+    employee_id INT AUTO_INCREMENT PRIMARY KEY,  -- Employee ID, auto-incremented
+    first_name VARCHAR(50),                      -- First Name
+    last_name VARCHAR(50)                        -- Last Name
+);
+
+
+
+
+
+=======
+
+SHOW DATABASES;
+USE facebookdb;
+SELECT DATABASE();
+
+CREATE TABLE employees (
+    employee_id INT AUTO_INCREMENT PRIMARY KEY,  -- Employee ID, auto-incremented
+    first_name VARCHAR(50),                      -- First Name
+    last_name VARCHAR(50)                        -- Last Name
+);
+
+INSERT INTO employees (first_name, last_name)
+VALUES ('MADHU', 'KIRAN');
+
+INSERT INTO employees (first_name, last_name)
+VALUES ('x', 'y');
+
+INSERT INTO employees (first_name, last_name)
+VALUES ('a', 'b');
+
+===========
+
+SELECT * FROM employees;
+
+SELECT first_name, last_name FROM employees;
+
+UPDATE employees
+SET last_name = 'Gorekar'
+WHERE employee_id = 2;
+
+
+DELETE FROM employees
+WHERE employee_id = 3;
+
+
+==============
+Create: INSERT INTO employees
+
+Read: SELECT * FROM employees
+
+Update: UPDATE employees SET column_name = value WHERE condition
+
+Delete: DELETE FROM employees WHERE condition
+
+
+====================================
+
+
+DATE: 23 FEB 2026
+
+    AWS ROUTE 53 – DETAILED NOTES WITH REAL-TIME EXAMPLE
+
+    --------------------------------------------------
+    WHAT IS ROUTE 53?
+    --------------------------------------------------
+
+        Amazon Route 53 is a scalable and highly available
+        **DNS (Domain Name System)** service provided by AWS.
+
+        DNS = Converts domain names into IP addresses.
+
+        Example:
+            You type: www.myapp.com
+            DNS converts it to → 54.23.10.8 (server IP)
+
+        Route 53 helps:
+            • Register domain names
+            • Host DNS records
+            • Route traffic to applications
+            • Health-check endpoints
+
+
+    --------------------------------------------------
+    WHY THE NAME "ROUTE 53"?
+    --------------------------------------------------
+
+        53 = DNS uses port number 53 (UDP/TCP).
+
+
+    --------------------------------------------------
+    WHAT CAN ROUTE 53 DO?
+    --------------------------------------------------
+
+        1) Domain Registration
+             Buy domains (example: myapp.com)
+
+        2) DNS Hosting
+             Create DNS records like A, CNAME, MX, TXT
+
+        3) Route Traffic
+             Send users to:
+                • EC2
+                • Load Balancers
+                • S3 static websites
+                • CloudFront
+                • External servers
+
+        4) Health Checks
+             Detect unhealthy servers and reroute traffic
+
+        5) Traffic Routing Policies
+             Distribute traffic based on business needs
+
+
+    --------------------------------------------------
+    COMMON DNS RECORD TYPES IN ROUTE 53
+    --------------------------------------------------
+
+        A Record
+            Domain → IPv4 address
+            Example: myapp.com → 54.10.20.30
+
+        AAAA Record
+            Domain → IPv6 address
+
+        CNAME
+            Alias → Another domain
+            Example: api.myapp.com → backend.myapp.com
+
+        Alias Record
+            AWS-specific record type
+            Example: myapp.com → ALB / CloudFront / S3
+
+        MX Record
+            Mail servers
+
+        TXT Record
+            Verification (DKIM, SPF, Google verification)
+
+
+    --------------------------------------------------
+    ROUTING POLICIES
+    --------------------------------------------------
+
+        1) Simple Routing
+            One domain → one endpoint
+
+        2) Weighted Routing
+            Split traffic (ex: 70% v1, 30% v2)
+
+        3) Latency-Based Routing
+            User routed to nearest region
+
+        4) Failover Routing
+            Primary active → Backup only when primary fails
+
+        5) Geo Location Routing
+            Route based on user country
+
+        6) Geo Proximity Routing
+            Region-based routing with bias control
+
+        7) Multi-Value Answer
+            Return multiple healthy IPs
+
+
+    --------------------------------------------------
+    REAL-TIME EXAMPLE
+    --------------------------------------------------
+
+    Scenario:
+        You have a production website hosted in AWS.
+
+        Architecture:
+            - ALB (Application Load Balancer)
+            - EC2 instances behind ALB
+            - Domain name purchased: myapp.com
+
+    Steps:
+
+        1) Buy domain in Route 53
+               myapp.com
+
+        2) Create Hosted Zone
+               Auto-created when buying the domain
+
+        3) Create DNS Record
+               A or Alias record:
+                   myapp.com → ALB DNS name
+
+               Example:
+                   myapp.com → myapp-alb-123.amazonaws.com
+
+        4) User accesses website
+               User types myapp.com
+                     ↓
+               Route 53 resolves domain
+                     ↓
+               Points to ALB
+                     ↓
+               ALB forwards to EC2 backend servers
+
+        5) Health Check (optional)
+               Route 53 monitors EC2 or ALB health
+               If instance is unhealthy → traffic moved away
+
+
+    --------------------------------------------------
+    WHY ROUTE 53 IS IMPORTANT FOR DEVOPS?
+    --------------------------------------------------
+
+        • Used in almost every real-time application
+        • Needed for domain → application mapping
+        • Used with:
+            - S3 static websites
+            - CloudFront
+            - ALB/NLB
+            - Multi-region deployments
+            - Disaster recovery setups
+
+
+    --------------------------------------------------
+    SIMPLE SUMMARY
+    --------------------------------------------------
+
+        Route 53 = DNS + Traffic Routing + Domain registration.
+
+        It converts domain names into IP addresses
+        and routes users to the correct AWS resource.
+
+        Essential for hosting websites & APIs in AWS.
