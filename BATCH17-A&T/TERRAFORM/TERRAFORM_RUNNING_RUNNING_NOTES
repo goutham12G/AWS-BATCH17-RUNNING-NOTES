@@ -1,0 +1,83 @@
+DATEl 12 MAR 2026
+
+Terraform is an open-source Infrastructure as Code (IaC) tool developed by HashiCorp. 
+
+It allows you to define, provision, and manage infrastructure (like servers, databases, networks, etc.) using declarative configuration files, usually written in HashiCorp Configuration Language (HCL) or JSON.
+
+  - setup and maintenance of infrastructure across many cloud providers 
+
+  - Automation: No need to manually configure infrastructure.
+
+  - Version Control: Code can be stored in Git like app code.
+
+  - Repeatable: Run the same config in different environments.
+
+  - Multi-Cloud: Works across different cloud providers.
+  
+  
+ =======================
+Core Architecture Components
+Terraform Core (CLI)
+
+      Written in Go.      
+      Parses HCL configuration files (.tf)    
+
+
+Providers:
+       Plugins that allow Terraform to interact with APIs (e.g. AWS, Azure, GCP, Kubernetes).
+       
+       Define the types of resources available for management.
+       
+State File (terraform.tfstate)
+       
+       JSON file that stores metadata of managed resources.       
+
+       Used to track current infrastructure state.       
+
+       Can be stored locally or remotely (e.g. S3, Azure Blob).      
+
+       Ensures consistency and supports collaboration (with locking).
+
+ ==========
+
+ Terraform Workflow
+ 
+Write:Create configuration in .tf files.
+
+
+terraform init: Run terraform init to initialize the working directory and download providers.
+
+terraform  Plan: Run terraform plan to preview changes.
+
+terraform  Apply: Run terraform apply to provision/update resources.
+
+terraform  Destroy : Run terraform destroy to tear down infrastructure.
+
+
+INSTALL:
+
+https://developer.hashicorp.com/terraform/install
+
+env :
+
+path : C:\Users\Madhukiran\Desktop\BATCH17\TERRAFORM\terraform_1.14.7_windows_amd64
+
+
+
+aws cli 
+
+aws configure 
+    accesskey 
+	secet accesskey 
+	
+	xxxxxAKIASB5M6C5FNMxxxxxx
+	xxxxxxxxxxudsyoyZ+jeTsPHxxxxxxxxxx
+	
+================================
+
+terraform install 
+vis studio code install 
+
+aws configure -- 
+
+=======
