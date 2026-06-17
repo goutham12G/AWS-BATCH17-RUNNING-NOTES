@@ -11,15 +11,17 @@ spec:
 
     readinessProbe:
       httpGet:
-        path: /ready
-        port: 8082
+        path: /
+        port: 80
       initialDelaySeconds: 5
       periodSeconds: 5
+      timeoutSeconds: 2
+      successThreshold: 1
+      failureThreshold: 3
 
- #   readinessProbe:
- #     httpGet:
-  #      path: /ready
- #       port: 8080
-  #    initialDelaySeconds: 5
-  #    periodSeconds: 5
 
+# initialDelaySeconds: Gives Nginx time to start before probing begins.
+#  periodSeconds: 5	Checks readiness every 5 seconds instead of 10.
+# timeoutSeconds: 2	Probe fails if no response within 2 seconds.
+# successThreshold: 1	One successful probe marks the pod Ready.
+# failureThreshold: 3	Three consecutive failures are required before marking the pod NotReady.

@@ -18,3 +18,9 @@ spec:
       periodSeconds: 5        # Run the check every 10 seconds
       failureThreshold: 2       # Restart container after 3 failed checks
 
+
+
+#kubectl exec -it liveness-pod -- bash
+#cat /usr/share/nginx/html/index.html
+
+##   $?  would return 0 if the file is present, and 1 if the file is not present.

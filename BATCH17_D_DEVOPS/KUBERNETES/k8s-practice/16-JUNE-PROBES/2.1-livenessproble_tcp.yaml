@@ -22,11 +22,11 @@ spec:
 
     livenessProbe:
       tcpSocket:
-        port: 4406                   # Check if TCP connection to port 4406 is open
+        port: 3306                   # Check if TCP connection to port 3306 is open
       initialDelaySeconds: 10        # Wait 10 seconds before first check
       periodSeconds: 10             # Check every 10 seconds
       failureThreshold: 2            # Restart container after 2 failed checks
 
 
 #kubectl exec -it mysql-liveness-pod -- sh
-#netstat -tulnp | grep 4406
+#netstat -tulnp | grep 3306
