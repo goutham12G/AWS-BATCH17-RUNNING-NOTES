@@ -2422,12 +2422,12 @@ CREATING IAM USERS IN AWS (MADHU AND KIRAN)
 Two IAM users were created in the AWS IAM console:
 
 User: madhu
-Access Key: xxxxxxxx
-Secret Access Key :xxxxxxxxx
+Access Keyxxxxxxx
+Secret Access Keyxxxxxxxx
 
 User: kiran
-Access Key: xxxxxxxx
-Secret Access Key :xxxxxxxxx
+Access Keyxxxxxxx
+Secret Access Keyxxxxxxxx
 
 
 For each user:
