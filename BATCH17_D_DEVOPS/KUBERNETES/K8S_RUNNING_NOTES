@@ -2422,12 +2422,12 @@ CREATING IAM USERS IN AWS (MADHU AND KIRAN)
 Two IAM users were created in the AWS IAM console:
 
 User: madhu
-AKIA5FQ3NZV5WGAWDIMA
-H8KWyWXyYqDhhwFXV2o7n7HrwEAhcoIUZhd/ZvPW
+AKIAxxxxxxxxx
+H8KWyWXyYqDhhwFXV2oxxxxxxxxxxxx
 
 User: kiran
-AKIA5FQ3NZV5WDS2F46J
-8gDcezZdIAvgY9FkRq/4eDtcaYvT+qPxhFoWyane
+AKIA5FQ3NZxxxxxxxxxx
+8gDcezZdIAvgY9FkRq/4eDtcxxxxxxxxxxxxx
 
 For each user:
 
