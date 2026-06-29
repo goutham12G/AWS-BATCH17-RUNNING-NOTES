@@ -2822,7 +2822,163 @@ kubectl apply -k github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes
 
 
 ==============================================
+DATE: 29 JUNE 26 
 
+
+Kubernetes StatefulSets: 
+
+A StatefulSet is a Kubernetes controller used to manage stateful applications — workloads that require stable, unique network identifiers and persistent storage.
+
+
+
+In Kubernetes, most workloads (like Deployments) are stateless, meaning:
+
+   Each pod is identical.   
+   It doesn’t matter which pod serves your request.   
+   You can delete, recreate, or scale pods freely — no data or identity is lost.
+
+Stateful means the application has memory or identity that must persist, such as:
+
+    A database that stores data on disk. 
+    A message broker (like Kafka, RabbitMQ) that keeps message queues. 
+    Any system that requires stable storage or a unique network identity
+	
+	
+Let’s say you’re running a 3-node mysql/MongoDB cluster:
+
+   You can’t just start all pods at once. The primary must start first.
+   Each pod must keep its own data volume (so the database doesn’t lose its data).
+   Each pod must have a stable name (mongo-0, mongo-1, mongo-2) to connect to each other.
+
+so statefulsets provides :
+
+A StatefulSet is used when your application needs:
+
+✅ Stable pod names (not random) - Stable network identity
+✅ Persistent storage for each pod
+✅ Ordered creation and deletion of pods ,  Ordered deployment & scaling
+   
+  
+=======================
+
+1. Create a Headless Service: 
+---- This service ensures each pod gets a stable DNS entry like:
+
+
+2. Create the StatefulSet
+
+
+
+==========================================================================================================
+
+
+AUTO SCALING :
+Auto Scaling means automatically adjusting resources (like servers, pods, or CPUs) based on the load on your system.
+
+       If your app gets busy, it adds more resources (scales up).       
+       If traffic is low, it removes resources (scales down).
+	   Keep performance good without wasting resources.
+
+
+Horizontal Auto Scaling?  (scaling out or in )  ----> by adding or removing instances /PODS 
+
+Vertical Auto Scaling? (scaling up or down)   ---> by increasing or decreasing the resources (CPU/RAM) of the same Instance/ Pod.
+
+
+
+HPA: (HORIZONTAL POD AUTOSCALAR) 
+metric server:
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/high-availability-1.21+.yaml
+
+
+
+ Run this in a separate terminal
+# so that the load generation continues and you can carry on with the rest of the steps
+kubectl run -i --tty load-generator --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
+
+
+
+
+======================================
+Daemonset:
+
+-  A DaemonSet ensures that a copy of a specific Pod runs on every (or selected) node in your Kubernetes cluster.
+
+- So while a Deployment scales pods across nodes, a DaemonSet ensures one (or a few) specific pods exist per node — typically for background system-level workloads.
+
+- A DaemonSet runs one pod per node — automatically managing cluster-wide agents like log collectors, monitoring daemons, and security scanners
+
+
+DaemonSet_Use_Cases:
+
+  NodeMonitoring:
+
+      Deploys node-level monitoring agents to collect CPU, memory, disk, and network metrics from each node.
+      These metrics are typically scraped by Prometheus or sent to monitoring platforms like Datadog.
+	  
+    Examples:
+      - Prometheus Node Exporter
+      - Datadog Agent
+
+  LogCollection:	
+  
+      Collects and forwards logs from containers and system daemons running on each node.
+      Ensures centralized log aggregation and analytics in tools like Elasticsearch, Loki, or Splunk.
+	  
+    Examples:
+      - Fluentd
+      - Filebeat
+      - Vector
+
+  SecurityScanning:
+
+      Runs continuous or scheduled node-level security scanning agents to detect vulnerabilities, malware,
+      and suspicious runtime behavior across nodes and containers.
+	  
+    Examples:
+      - Falco
+      - Aqua Trivy Daemon
+
+
+
+  Networking:
+
+      Installs and manages Container Network Interface (CNI) plugins that provide pod networking,
+      network policies, and service routing functionality across all nodes.
+	  
+    Examples:
+      - Calico
+      - Cilium
+      - Weave Net
+
+  Storage:
+
+      Deploys storage interface drivers (CSI drivers) to enable dynamic or static provisioning of persistent
+      volumes for pods, ensuring consistent storage management across nodes.
+	  
+    Examples:
+      - Amazon EBS CSI Driver
+      - Amazon EFS CSI Driver
+      - NFS Driver
+
+  SystemMetrics:
+
+      Collects detailed node health and system metrics, such as kernel issues, node conditions,
+      hardware utilization, and GPU metrics for high-performance workloads.
+    Examples:
+      - Node Problem Detector
+      - nvidia-device-plugin
+
+
+
+  
+Concept	Memory Hook
+Deployment  --  I just want X replicas of my app, doesn’t matter which node or order.
+StatefulSet	--  want pods with sticky identity and persistent storage, in order.
+DaemonSet	 -- I want one pod on every node, always.
+
+
+=======================================================================================
 
 
 
